@@ -13,8 +13,6 @@ class Word:
     def encrypt(self):
         return ['__'] * len(self.text)
 
-# word = Word('tree', 'a tall green plant', 'starts with t')
-
 class Game:
     word = Word('','','')
     lives = ['<3'] * 5
@@ -35,7 +33,7 @@ class Game:
 
     @classmethod
     def play(cls):
-        guess = input('Guess a letter: ').lower()
+        guess = input('\nGuess a letter: ').lower()
         cls.check_guess(guess)
         cls.last_guess['letter'] = guess
 
@@ -56,6 +54,7 @@ class Game:
                 cls.reveal_letters(guess)
                 cls.last_guess['correct'] = True
                 cls.letters.remove(guess)
+                cls.guessed_letters.append(guess)
                 return
         
         cls.last_guess['correct'] = False
@@ -95,15 +94,26 @@ class Game:
         cls.print_array(cls.word.secret)
         
         print(f'\n\nDefinition: {cls.word.definition}')
-        print(f'\nHint: {cls.word.hint}\n')
+        if len(cls.lives) < 3:
+            print(f'Hint: {cls.word.hint}')
 
         if cls.invalid_guess['true']:
-            print(f'Invalid guess ({cls.invalid_guess['letter']})\n')
+            print(f'\nInvalid guess ({cls.invalid_guess['letter']})')
         elif cls.last_guess['letter'] != '':
-            print(f'{'Correct' if cls.last_guess['correct'] == True else 'Incorrect'} guess! ({cls.last_guess['letter']})\n')
+            print(f'\n{'Correct' if cls.last_guess['correct'] == True else 'Incorrect'} guess! ({cls.last_guess['letter']})')
 
-Game.set_word()
+        if cls.lost():
+            print(f'\nYou have lost:(\nThe word was [{cls.word.text}]')
+        elif cls.won():
+            print(f'\nYou have won!')
 
-while(1):
-    Game.display()
-    Game.play()
+    @classmethod
+    def lost(cls):
+        return len(cls.lives) == 0
+    
+    @classmethod
+    def won(cls):
+        for letter in cls.word.secret:
+            if letter ==  '__':
+                return False
+        return True
