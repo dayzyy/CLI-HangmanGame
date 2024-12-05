@@ -19,7 +19,7 @@ cd CLI-HangmanGame/
 You are all set!
 
 ## Running the game
-To play the guy run the following command:
+To play the game run the following command:
 ```python
 python3 main.py
 ```
